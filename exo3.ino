@@ -167,11 +167,13 @@ void loop()
       }
     }
 
+    // RESET
     lastButton = HIGH;
     lastButton2 = HIGH;
     lastButton3 = HIGH;
     lastButton4 = HIGH;
 
+    // Clignotement confirmant la saisie
     writeAll(HIGH);
     delay(1000);
     writeAll(LOW);
