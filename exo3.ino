@@ -6,10 +6,18 @@ char pinButton = 6;
 char pinButton2 = 8;
 char pinButton3 = 10;
 char pinButton4 = 12;
+
+// Mapping des leds
 int arr[4];
+
+// Pile des couleurs
 int stack[50];
 int randC;
+
+// Index lecture + index joueur
 int i = 0;
+int current = 0;
+
 boolean hasToAddColor = true;
 
 int lastButton = HIGH;
@@ -19,18 +27,20 @@ int lastButton4 = HIGH;
 
 void setup()
 {
+  // Mapping des pin led pour le random
   arr[0] = 5;
   arr[1] = 7;
   arr[2] = 9;
   arr[3] = 11;
 
+  // Var pour la game
   lastButton = HIGH;
   lastButton2 = HIGH;
   lastButton3 = HIGH;
   lastButton4 = HIGH;
+  hasToAddColor = false;
 
-  hasToAddColor = true;
-  
+  // Configure led / button
   pinMode(pinLed, OUTPUT);
   pinMode(pinButton, INPUT_PULLUP);
   pinMode(pinLed2, OUTPUT);
@@ -39,65 +49,138 @@ void setup()
   pinMode(pinButton3, INPUT_PULLUP);
   pinMode(pinLed4, OUTPUT);
   pinMode(pinButton4, INPUT_PULLUP);
-  
+
+  // START SHUT DOWN ALL LED
   digitalWrite(pinLed, LOW);
   digitalWrite(pinLed2, LOW);
   digitalWrite(pinLed3, LOW);
   digitalWrite(pinLed4, LOW);
+
+  // START THE GAME
+  addColor();
 }
 
+// Light on/off all led at the same time
+void writeAll(int value) {  
+  digitalWrite(pinLed, value);
+  digitalWrite(pinLed2, value);
+  digitalWrite(pinLed3, value);
+  digitalWrite(pinLed4, value);
+}
+
+// Add random color to the pile
+void addColor() {
+  current = 0;
+  randC = random(0,4);
+
+  stack[i] = randC;
+  i++;
+
+  for (int j = 0; j < i; j++) {
+    digitalWrite(arr[stack[j]], HIGH);
+    delay(1000);
+    digitalWrite(arr[stack[j]], LOW);    
+    delay(1000);   
+  }
+}
+
+// End game action and reset
+int failGame() {
+  i = 0;
+  current = 0;
+  hasToAddColor = true;
+
+  writeAll(HIGH);
+  delay(1000);
+  writeAll(LOW);
+  delay(300);
+  writeAll(HIGH);
+  delay(1000);
+  writeAll(LOW);
+  delay(300);
+}
+
+// Main loop
 void loop()
 {
+  // Read Input
   boolean buttonState = digitalRead(pinButton);
   boolean buttonState2 = digitalRead(pinButton2);
   boolean buttonState3 = digitalRead(pinButton3);
   boolean buttonState4 = digitalRead(pinButton4);
 
-
-
-if ((buttonState != lastButton) || (buttonState2 != lastButton2) || (buttonState3 != lastButton3) || (buttonState4 != lastButton4)) {
-  //TEST CORRECT
-
-  hasToAddColor = true;
-}
-
-
-  if (hasToAddColor == true) {
-    randC = random(0,4);
-
-    stack[i] = randC;
-    i++;
-
-
-    for (int j = 0; j < i; j++) {
-      digitalWrite(arr[stack[j]], HIGH);
-      delay(1000);
-      digitalWrite(arr[stack[j]], LOW);   
-      delay(1000);   
+  if ((buttonState != lastButton) || (buttonState2 != lastButton2) || (buttonState3 != lastButton3) || (buttonState4 != lastButton4)) {
+    //TEST CORRECT
+    if (buttonState != lastButton) {
+      if (stack[current] == 0) {
+        // GOOD PUSH
+        current++;
+        if (current == i) {
+          // ALL GOOD CHOICE, ADD ONE COLOR
+          hasToAddColor = true;
+        }
+      } else {
+        // WRONG PUSH
+        failGame();
+      }
     }
 
-    hasToAddColor = false;
+    if (buttonState2 != lastButton2) {
+      if (stack[current] == 1) {
+        // GOOD PUSH
+        current++;
+        if (current == i) {
+          // ALL GOOD CHOICE, ADD ONE COLOR
+          hasToAddColor = true;
+        }
+      } else {
+        // WRONG PUSH
+        failGame();
+      }
+    }
+
+    if (buttonState3 != lastButton3) {
+      if (stack[current] == 2) {
+        // GOOD PUSH
+        current++;
+        if (current == i) {
+          // ALL GOOD CHOICE, ADD ONE COLOR
+          hasToAddColor = true;
+        }
+      } else {
+        // WRONG PUSH
+        failGame();
+      }
+    }
+
+    if (buttonState4 != lastButton4) {
+      if (stack[current] == 3) {
+        // GOOD PUSH
+        current++;
+        if (current == i) {
+          // ALL GOOD CHOICE, ADD ONE COLOR
+          hasToAddColor = true;
+        }
+      } else {
+        // WRONG PUSH
+        failGame();
+      }
+    }
+
+    lastButton = HIGH;
+    lastButton2 = HIGH;
+    lastButton3 = HIGH;
+    lastButton4 = HIGH;
+
+    writeAll(HIGH);
+    delay(1000);
+    writeAll(LOW);
+    delay(100);
   }
 
-
-  /*if (buttonState == LOW)
-    digitalWrite(pinLed, HIGH);
-  else
-    digitalWrite(pinLed, LOW);
-    
-  if (buttonState2 == LOW)
-    digitalWrite(pinLed2, HIGH);
-  else
-    digitalWrite(pinLed2, LOW);
-    
-  if (buttonState3 == LOW)
-    digitalWrite(pinLed3, HIGH);
-  else
-    digitalWrite(pinLed3, LOW);
-    
-  if (buttonState4 == LOW)
-    digitalWrite(pinLed4, HIGH);
-  else
-    digitalWrite(pinLed4, LOW);*/
-
+  // At the end, if needed, add color
+  if (hasToAddColor == true) {
+    addColor();
+    hasToAddColor = false;
+  }
 }
