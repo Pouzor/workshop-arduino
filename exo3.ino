@@ -7,8 +7,8 @@ char pinButton2 = 8;
 char pinButton3 = 10;
 char pinButton4 = 12;
 
-// Mapping des leds
-int arr[4];
+// Leds array mapping
+int mapping[4];
 
 // Pile des couleurs
 int stack[50];
@@ -27,11 +27,11 @@ int lastButton4 = HIGH;
 
 void setup()
 {
-  // Mapping des pin led pour le random
-  arr[0] = 5;
-  arr[1] = 7;
-  arr[2] = 9;
-  arr[3] = 11;
+  // Pin mapping for led random choice
+  mapping[0] = 5;
+  mapping[1] = 7;
+  mapping[2] = 9;
+  mapping[3] = 11;
 
   // Var pour la game
   lastButton = HIGH;
@@ -77,9 +77,9 @@ void addColor() {
   i++;
 
   for (int j = 0; j < i; j++) {
-    digitalWrite(arr[stack[j]], HIGH);
+    digitalWrite(mapping[stack[j]], HIGH);
     delay(1000);
-    digitalWrite(arr[stack[j]], LOW);    
+    digitalWrite(mapping[stack[j]], LOW);    
     delay(1000);   
   }
 }
@@ -173,7 +173,7 @@ void loop()
     lastButton3 = HIGH;
     lastButton4 = HIGH;
 
-    // Clignotement confirmant la saisie
+    // Blink to confirm button pressure
     writeAll(HIGH);
     delay(1000);
     writeAll(LOW);
