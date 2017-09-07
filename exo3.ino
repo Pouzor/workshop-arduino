@@ -84,6 +84,15 @@ void addColor() {
   }
 }
 
+void confirmPressure() {
+  // Blink to confirm button pressure
+  writeAll(HIGH);
+  delay(1000);
+  writeAll(LOW);
+  delay(100);
+}
+
+
 // End game action and reset
 int failGame() {
   i = 0;
@@ -173,11 +182,8 @@ void loop()
     lastButton3 = HIGH;
     lastButton4 = HIGH;
 
-    // Blink to confirm button pressure
-    writeAll(HIGH);
-    delay(1000);
-    writeAll(LOW);
-    delay(100);
+    confirmPressure();
+
   }
 
   // At the end, if needed, add color
